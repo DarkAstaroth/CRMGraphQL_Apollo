@@ -23,7 +23,7 @@ const typeDef = gql`
 
   input AutenticarInput {
     email: String!
-    password: String!
+    password: String
   } 
 
   type Query {
