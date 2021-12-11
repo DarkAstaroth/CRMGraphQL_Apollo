@@ -6,7 +6,7 @@ const ProductosSchema = mongoose.Schema({
     required:true,
     trim:true
   },
-  existencias:{
+  existencia:{
     type:Number,
     required:true
   },
