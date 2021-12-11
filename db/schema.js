@@ -19,7 +19,7 @@ const typeDef = gql`
     nombre: String
     existencia: Int
     precio: Float
-    craedo: String
+    creado: String
   }
 
   input UsuarioInput {
