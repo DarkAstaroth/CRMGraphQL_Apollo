@@ -24,6 +24,17 @@ const resolvers = {
         console.log(e);
       }
     },
+    obtenerProducto:async (_,{id})=>{
+      // revisar si el producto existe o no
+      const producto = await Producto.findById(id);
+
+      if (!producto) {
+        throw new Error('Producto no encontrado');
+      }
+
+      return producto;
+    }
+
   },
   Mutation: {
     nuevoUsuario: async (_, { input }) => {
