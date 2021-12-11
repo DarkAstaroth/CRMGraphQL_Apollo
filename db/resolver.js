@@ -1,21 +1,20 @@
 const Usuario = require("../models/Usuarios");
+const Producto = require("../models/Producto");
 const bcryptjs = require("bcryptjs");
 require("dotenv").config({ path: "variables.env" });
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
-const crearToken = (usuario,secreta,expiresIn) => {
+const crearToken = (usuario, secreta, expiresIn) => {
   // console.log(usuario);
-  const {id,email,nombre,apellido} = usuario;
-  return jwt.sign({ id }, secreta,{expiresIn} );
-
-};
+  const { id, email, nombre, apellido } = usuario;
+  return jwt.sign({ id }, secreta, { expiresIn });
+}
 
 const resolvers = {
   Query: {
-    obtenerUsuario:async (_,{token}) => {
-      const usuarioId= await jwt.verify(token, process.env.SECRETA)
+    obtenerUsuario: async (_, { token }) => {
+      const usuarioId = jwt.verify(token, process.env.SECRETA);
       return usuarioId;
-      
     },
   },
   Mutation: {
@@ -57,12 +56,12 @@ const resolvers = {
         existeUsuario.password
       );
       if (!passwordCorrecto) {
-        throw Error("El password es incorrecto");
+        throw new Error("El password es incorrecto");
       }
 
       // Crear el token
       return {
-        token: crearToken(existeUsuario, process.env.SECRETA, '24h'),
+        token: crearToken(existeUsuario, process.env.SECRETA, "24h")
       };
     },
   },

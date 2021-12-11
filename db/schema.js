@@ -11,28 +11,28 @@ const typeDef = gql`
   }
 
   type Token {
-    token : String
+    token: String
   }
 
   input UsuarioInput {
     nombre: String!
     apellido: String!
-    email: String!
+    email:String!
     password: String!
   }
 
   input AutenticarInput {
     email: String!
-    password: String
-  } 
+    password: String!
+  }
 
   type Query {
-   obtenerUsuario(token: String!): Usuario 
+    obtenerUsuario(token: String!): Usuario
   }
 
   type Mutation {
     nuevoUsuario(input: UsuarioInput): Usuario
-    autenticarUsuario(input:AutenticarInput): Token
+    autenticarUsuario(input: AutenticarInput): Token
   }
 `;
 
