@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 const crearToken = (usuario, secreta, expiresIn) => {
   // console.log(usuario);
   const { id, email, nombre, apellido } = usuario;
-  return jwt.sign({ id }, secreta, { expiresIn });
+  return jwt.sign({ id,nombre,apellido,email }, secreta, { expiresIn });
 };
 
 const resolvers = {
@@ -121,10 +121,11 @@ const resolvers = {
 
       return "Producto eliminado";
     },
-    nuevoCliente: async (_, { input }) => {
+    nuevoCliente: async (_, { input },ctx) => {
+      console.log(ctx);
       const { email } = input;
       // Verificar si el cliente ya esta registrado
-      console.log(input);
+      
       const cliente = await Cliente.findOne({ email });
       if (cliente) {
         throw new Error("Ese cliente ya esta resgistrado");
@@ -132,7 +133,7 @@ const resolvers = {
       const nuevoCliente = new Cliente(input);
 
       // Asignar el vendedor
-      // nuevoCliente.vendedor = "sd76567asdf765456g6s";
+      nuevoCliente.vendedor = ctx.usuario.id; 
       // guardarlo en la base de datos
       try {
         const resultado = await nuevoCliente.save();
