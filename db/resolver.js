@@ -25,17 +25,17 @@ const resolvers = {
         console.log(e);
       }
     },
-    obtenerProducto:async (_,{id})=>{
+    obtenerProducto: async (_, { id }) => {
       // revisar si el producto existe o no
       const producto = await Producto.findById(id);
 
       if (!producto) {
-        throw new Error('Producto no encontrado');
+        throw new Error("Producto no encontrado");
       }
 
+      const { email } = input;
       return producto;
-    }
-
+    },
   },
   Mutation: {
     nuevoUsuario: async (_, { input }) => {
@@ -94,31 +94,53 @@ const resolvers = {
         console.log(e);
       }
     },
-    actualizarProducto:async(_,{id,input})=>{
-       // revisar si el producto existe o no
-      let producto = await Producto.findById(id);
-
-      if (!producto) {
-        throw new Error('Producto no encontrado');
-      }
-
-      // guardarlo en la base de datos
-      producto = await Producto.findOneAndUpdate({_id:id},input,{new:true});
-      return producto;
-    },
-    eliminarProducto:async (_,{id})=>{
+    actualizarProducto: async (_, { id, input }) => {
       // revisar si el producto existe o no
       let producto = await Producto.findById(id);
 
       if (!producto) {
-        throw new Error('Producto no encontrado');
+        throw new Error("Producto no encontrado");
+      }
+
+      // guardarlo en la base de datos
+      producto = await Producto.findOneAndUpdate({ _id: id }, input, {
+        new: true,
+      });
+      return producto;
+    },
+    eliminarProducto: async (_, { id }) => {
+      // revisar si el producto existe o no
+      let producto = await Producto.findById(id);
+
+      if (!producto) {
+        throw new Error("Producto no encontrado");
       }
 
       //Eliminar el producto
-      await Producto.findOneAndDelete({_id:id})
+      await Producto.findOneAndDelete({ _id: id });
 
-      return "Producto eliminado"
-    }
+      return "Producto eliminado";
+    },
+    nuevoCliente: async (_, { input }) => {
+      const { email } = input;
+      // Verificar si el cliente ya esta registrado
+      console.log(input);
+      const cliente = await Cliente.findOne({ email });
+      if (cliente) {
+        throw new Error("Ese cliente ya esta resgistrado");
+      }
+      const nuevoCliente = new Cliente(input);
+
+      // Asignar el vendedor
+      // nuevoCliente.vendedor = "sd76567asdf765456g6s";
+      // guardarlo en la base de datos
+      try {
+        const resultado = await nuevoCliente.save();
+        return resultado;
+      } catch (e) {
+        console.log(e);
+      }
+    },
   },
 };
 
