@@ -36,6 +36,15 @@ const resolvers = {
       const { email } = input;
       return producto;
     },
+    obtenerClientes:async ()=>{
+      try {
+       const clientes= await Cliente.find({}) ;
+	return clientes;
+      } catch (e) {
+	console.log(e);
+      }
+    }
+
   },
   Mutation: {
     nuevoUsuario: async (_, { input }) => {
