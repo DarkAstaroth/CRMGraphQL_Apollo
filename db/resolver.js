@@ -59,6 +59,7 @@ const resolvers = {
         throw new Error("Cliente no encontrado");
       }
       // Quien puede verlo
+      console.log(cliente.vendedor.toString());
       if (cliente.vendedor.toString() !== ctx.usuario.id) {
         throw new Error("No tienes las credenciales");
       }
@@ -169,6 +170,24 @@ const resolvers = {
       } catch (e) {
         console.log(e);
       }
+    },
+    actualizarCliente: async (_, { id, input }, ctx) => {
+      // Verficar si existe o no
+      let cliente = await Cliente.findById(id);
+
+      if (!cliente) {
+        throw new Error("Ese cliente no existe");
+      }
+
+      // Verificar si el vendedor es quien edita
+      if (cliente.vendedor.toString() !== ctx.usuario.id) {
+        throw new Error("No tienes las credenciales");
+      }
+      // Guardar el cliente
+      cliente = await Cliente.findOneAndUpdate({ _id: id }, input, {
+        new: true,
+      });
+      return cliente;
     },
   },
 };
