@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 const crearToken = (usuario, secreta, expiresIn) => {
   // console.log(usuario);
   const { id, email, nombre, apellido } = usuario;
-  return jwt.sign({ id,nombre,apellido,email }, secreta, { expiresIn });
+  return jwt.sign({ id, nombre, apellido, email }, secreta, { expiresIn });
 };
 
 const resolvers = {
@@ -36,15 +36,22 @@ const resolvers = {
       const { email } = input;
       return producto;
     },
-    obtenerClientes:async ()=>{
+    obtenerClientes: async () => {
       try {
-       const clientes= await Cliente.find({}) ;
-	return clientes;
+        const clientes = await Cliente.find({});
+        return clientes;
       } catch (e) {
-	console.log(e);
+        console.log(e);
       }
-    }
-
+    },
+    obtenerClientesVendedor: async (_,{},ctx) => {
+      try {
+        const clientes = await Cliente.find({ vendedor: ctx.usuario.id });
+        return clientes;
+      } catch (e) {
+        console.log(e);
+      }
+    },
   },
   Mutation: {
     nuevoUsuario: async (_, { input }) => {
@@ -130,11 +137,11 @@ const resolvers = {
 
       return "Producto eliminado";
     },
-    nuevoCliente: async (_, { input },ctx) => {
+    nuevoCliente: async (_, { input }, ctx) => {
       console.log(ctx);
       const { email } = input;
       // Verificar si el cliente ya esta registrado
-      
+
       const cliente = await Cliente.findOne({ email });
       if (cliente) {
         throw new Error("Ese cliente ya esta resgistrado");
@@ -142,7 +149,7 @@ const resolvers = {
       const nuevoCliente = new Cliente(input);
 
       // Asignar el vendedor
-      nuevoCliente.vendedor = ctx.usuario.id; 
+      nuevoCliente.vendedor = ctx.usuario.id;
       // guardarlo en la base de datos
       try {
         const resultado = await nuevoCliente.save();
