@@ -33,7 +33,7 @@ const typeDef = gql`
   }
 
   type Pedido {
-    id: ID,
+    id: ID
     pedido: [PedidoGrupo]
     total: Float
     cliente: ID
@@ -42,9 +42,9 @@ const typeDef = gql`
     estado: EstadoPedido
   }
 
-  type PedidoGrupo{
-    id:ID
-    cantidad:Int
+  type PedidoGrupo {
+    id: ID
+    cantidad: Int
   }
 
   input UsuarioInput {
@@ -81,7 +81,7 @@ const typeDef = gql`
   input PedidoInput {
     pedido: [PedidoProductoInput]
     total: Float!
-    cliente ID!
+    cliente: ID!
     estado: EstadoPedido
   }
 
