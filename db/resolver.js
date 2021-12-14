@@ -84,8 +84,9 @@ const resolvers = {
       }
     },
     obtenerPedido: async (_, { id }, ctx) => {
-      // Si el pedido existe o no
       const pedido = await Pedido.findById(id);
+      // Si el pedido existe o no
+
       if (!pedido) {
         throw new Error("Pedido no encontrado");
       }
@@ -281,6 +282,53 @@ const resolvers = {
 
       // Guardarlo en la base de datos
       const resultado = await nuevoPedido.save();
+      return resultado;
+    },
+    actualizarPedido: async (_, { id, input }, ctx) => {
+      const { cliente } = input;
+      // Si el pedido existe
+      const existePedido = await Pedido.findById(id);
+      if (!existePedido) {
+        throw new Error("El pedido no existe");
+      }
+      // Si el cliente existe
+      const existeCliente = await Cliente.findById(cliente);
+      if (!existeCliente) {
+        throw new Error("El cliente no existe");
+      }
+
+      // Si el cliente y pedido pertecene al vendedor
+      if (existeCliente.vendedor.toString() !== ctx.usuario.id) {
+        throw new Error("No tienes las credenciales");
+      }
+
+      // Revisar el stock
+      if (input.pedido) {
+        for await (const articulo of input.pedido) {
+          console.log(articulo);
+
+          const { id } = articulo;
+          const producto = await Producto.findById(id);
+
+          console.log(producto);
+
+          if (articulo.cantidad > producto.existencia) {
+            throw new Error(
+              `El articulo: ${producto.nombre} excede la cantidad disponible`
+            );
+          } else {
+            // Restar la cantidad disponible
+            producto.existencia = producto.existencia - articulo.cantidad;
+            await producto.save();
+          }
+        }
+      }
+
+      // guardar el pedido
+      const resultado = await Pedido.findOneAndUpdate({ _id: id }, input, {
+        new: true,
+      });
+
       return resultado;
     },
   },
