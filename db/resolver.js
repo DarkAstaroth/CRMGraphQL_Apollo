@@ -80,8 +80,23 @@ const resolvers = {
         const pedidos = await Pedido.find({ vendedor: ctx.usuario.id });
         return pedidos;
       } catch (e) {
-	console.log(e);
+        console.log(e);
       }
+    },
+    obtenerPedido: async (_, { id }, ctx) => {
+      // Si el pedido existe o no
+      const pedido = await Pedido.findById(id);
+      if (!pedido) {
+        throw new Error("Pedido no encontrado");
+      }
+
+      // solo quien lo creo puede verlo
+      if (pedido.vendedor.toString() !== ctx.usuario.id) {
+        throw new Error("No tienes las credenciales");
+      }
+
+      // retornar el resultado
+      return pedido;
     },
   },
   Mutation: {
