@@ -67,6 +67,14 @@ const resolvers = {
       }
       return cliente;
     },
+    obtenerPedidos: async () => {
+      try {
+        const pedidos = await Pedido.find({});
+        return pedidos;
+      } catch (e) {
+        console.log(e);
+      }
+    },
   },
   Mutation: {
     nuevoUsuario: async (_, { input }) => {
