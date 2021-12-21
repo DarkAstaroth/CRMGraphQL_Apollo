@@ -103,7 +103,7 @@ const typeDef = gql`
 
   type Query {
     #Usuarios
-    obtenerUsuario(token: String!): Usuario
+    obtenerUsuario: Usuario
 
     #Productos
     obtenerProductos: [Producto]
@@ -123,7 +123,7 @@ const typeDef = gql`
     #Busquedas avanzadas
     mejoresClientes: [TopCliente]
     mejoresVendedores: [TopVendedor]
-    buscarProducto(texto: String!) : [Producto]
+    buscarProducto(texto: String!): [Producto]
   }
 
   type Mutation {
